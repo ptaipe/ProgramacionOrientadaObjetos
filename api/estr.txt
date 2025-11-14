@@ -1,0 +1,16 @@
+api/
+│── app.py
+│── database/
+│     └── db.py
+│── models/
+│     ├── cliente.py
+│     ├── producto.py
+│     └── venta.py
+│── services/
+│     ├── cliente_service.py
+│     ├── producto_service.py
+│     └── venta_service.py
+│── controllers/
+│     ├── cliente_controller.py
+│     ├── producto_controller.py
+│     └── venta_controller.py
