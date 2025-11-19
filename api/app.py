@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask # pip install flask
 from controllers.cliente_controller import cliente_api
 
 app = Flask(__name__)

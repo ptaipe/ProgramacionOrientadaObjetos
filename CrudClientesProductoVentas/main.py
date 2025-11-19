@@ -1,4 +1,4 @@
-#  \\Sno_lab31324\crud_poo
+#  \\pip install requests
 
 from models.cliente import Cliente
 from services.cliente_service import ClienteService
@@ -69,7 +69,14 @@ def main():
            else:
                print("Error al actualizar cliente.")
         
-       #elif opcion == "5":
+       elif opcion == "5":
+           print("\n Eliminar Cliente por ID")
+           id_cliente = int(input("Ingrese ID: "))
+           cliente = service.eliminar(id_cliente)
+           if cliente:               
+               print("Cliente Eliminado", id_cliente)
+           else:
+               print("Cliente no existe en la base de datos.") 
        elif opcion == "0":
            print("Saliendo del sistema... ")
            break        

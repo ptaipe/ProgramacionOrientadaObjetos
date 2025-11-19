@@ -1,58 +1,40 @@
-from db import Database
+import requests
 from models.cliente import Cliente
+
+API_URL = "http://127.0.0.1:5000/clientes"
 
 class ClienteService:
 
-    def __init__(self):
-        self.db = Database()
-
     def listar(self):
-        conn = self.db.conectar()
-        cur = conn.cursor(dictionary=True)
-        sql = "select * from clientes"
-        cur.execute(sql)
-        filas = cur.fetchall()
-        conn.close()
-        return filas
+        response = requests.get(API_URL)
+        return response.json()
     
     def crear(self, cliente: Cliente):
-        conn = self.db.conectar()
-        cur = conn.cursor()
-        sql = """INSERT INTO clientes(nombre, apellido, correo, telefono)
-                values(%s, %s, %s, %s)"""
-        valores = (cliente.nombre, cliente.apellido, cliente.correo, cliente.telefono)
-        cur.execute(sql, valores)
-        conn.commit()
-        conn.close()
-        return cur.rowcount > 0
+        data = {
+            "nombre":cliente.nombre,
+            "apellido":cliente.apellido,
+            "correo":cliente.correo,
+            "telefono":cliente.telefono
+        }
+        response = requests.post(API_URL, json=data)
+        return response.status_code == 200
     
     def buscar_por_id(self, id_cliente):
-        conn = self.db.conectar()
-        id_cliente = int(id_cliente)
-        cur = conn.cursor(dictionary=True)
-        sql = "select * from clientes where id_cliente = %s"
-        cur.execute(sql, (id_cliente,))
-        fila = cur.fetchone()
-        conn.close
-        return fila
+        response = requests.get(f"{API_URL}/{id_cliente}")
+        if response.status_code == 200:
+            return response.json()
+        return None
     
     def actualizar(self, cliente: Cliente):
-        conn = self.db.conectar()
-        cur = conn.cursor(dictionary=True)
-        sql = """update clientes
-        set nombre= %s, apellido= %s, correo=%s, telefono=%s
-        where id_cliente=%s"""
-        valores= (cliente.nombre, cliente.apellido,cliente.correo, cliente.telefono, cliente.id_cliente)
-        cur.execute(sql, valores)
-        conn.commit()
-        conn.close()
-        return cur.rowcount > 0
+        data = {
+            "nombre":cliente.nombre,
+            "apellido":cliente.apellido,
+            "correo":cliente.correo,
+            "telefono":cliente.telefono
+        }
+        response = requests.put(f"{API_URL}/{cliente.id_cliente}", json=data)
+        return response.status_code == 200
     
     def eliminar(self, id_cliente):
-        conn = self.db.conectar()
-        cur = conn.cursor(dictionary=True)
-        sql = "DELETE from clientes where id_cliente = %s"
-        cur.execute(sql, (id_cliente,))
-        conn.commit()
-        conn.close()
-        return cur.rowcount > 0
+        response = requests.delete(f"{API_URL}/{id_cliente}")
+        return response.status_code == 200
